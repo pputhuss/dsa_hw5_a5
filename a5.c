@@ -22,9 +22,9 @@ Point* createPoint(int x_val, int y_val) {
 }
 
 void addToTree(int x_val, int y_val, Point** head, int depth) {
-    if (head == NULL) 
+    if ((*head) == NULL) 
     {
-        head = createPoint(x_val, y_val);
+        (*head) = createPoint(x_val, y_val);
     }
     
     else //if "head" is already there
@@ -59,17 +59,37 @@ void addToTree(int x_val, int y_val, Point** head, int depth) {
 }
 
 int pointsInCircle (int center_x, int center_y, int radius, Point** head) {
-    Point* curr = (*head);
+    if (*head == NULL) 
+    {
+        return 0; // Check if head is NULL
+    }
 
+    int count = 0; //count of total points in circle
+    
     //(point x - center x)^2 + (point y - center y)^2 = r^2
     //if the calculated r^2 is greater than the given r^2, then that point is not in circle, count does not change
     //if the calculated r^2 is less than or equal to the given r^2, then that point is in the circle, count += 1
 
-    
+    int rad_sq = (((*head)->x - center_x) * ((*head)->x - center_x)) + (((*head)->y - center_y) * ((*head)->y - center_y));
+
+    if (rad_sq <= (radius * radius))
+    {
+        count++;
+    }
+
+    count += pointsInCircle(center_x, center_y, radius, &(*head)->left);
+    count += pointsInCircle(center_x, center_y, radius, &(*head)->right);
+
+    return count;
 }
 
-int main()
+int main(int argc, char* argv[])
 {    
+    //check if filename is provided 
+    if (argc < 2) {
+        printf("Usage: %s <input_filename>\n", argv[0]);
+        return -1; // Exit if no filename is provided
+    }
 
     //PART 1: BUILDING THE TREE
     //need to write code for file reading
@@ -77,7 +97,8 @@ int main()
     //make while loop to call build tree function for each node
     
     Point* head = NULL;
-    char filename[] = "input.txt"; //i just put input.txt for now
+    char* filename = argv[1]; // The filename is now taken from command line argument
+    // char filename[] = "input.txt"; //i just put input.txt for now
 
     FILE* file = fopen(filename, "r");
     if (file == NULL) {
@@ -95,20 +116,20 @@ int main()
     }
 
     fclose(file);
+    //at this point tree has been built and file is closed
 
     //PART 2: GETTING CENTER AND RADIUS
     int center_x;
     int center_y;
     int radius;
     
-    //printf("what center and what radius, for center put x and y");
-    scanf("%d %d %d", &center_x, &center_y, &radius);
-    pointsInCircle(center_x, center_y, radius, &head);
-
-
-
-
-
-
+    //printf("what center and what radius, for center put x and y \n");
+    while (1)
+    {
+        scanf("%d %d %d", &center_x, &center_y, &radius);
+        int count = pointsInCircle(center_x, center_y, radius, &head);
+        printf("%d\n", count);
+    }
+    
     return 0;
     }
