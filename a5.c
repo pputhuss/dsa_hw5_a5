@@ -96,7 +96,8 @@ int pointsInCircle (int center_x, int center_y, int radius, Point* head) {
 }
 
 void freeTree(Point* head) {
-    if (head == NULL) {
+    if (head == NULL) 
+    {
         return;
     }
     freeTree(head->left);
