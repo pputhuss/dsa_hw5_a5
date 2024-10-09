@@ -58,8 +58,8 @@ void addToTree(int x_val, int y_val, Point** head, int depth) {
     return;
 }
 
-int pointsInCircle (int center_x, int center_y, int radius, Point** head) {
-    if (*head == NULL) 
+int pointsInCircle (int center_x, int center_y, int radius, Point* head) {
+    if (head == NULL) 
     {
         return 0; // Check if head is NULL
     }
@@ -70,17 +70,38 @@ int pointsInCircle (int center_x, int center_y, int radius, Point** head) {
     //if the calculated r^2 is greater than the given r^2, then that point is not in circle, count does not change
     //if the calculated r^2 is less than or equal to the given r^2, then that point is in the circle, count += 1
 
-    int rad_sq = (((*head)->x - center_x) * ((*head)->x - center_x)) + (((*head)->y - center_y) * ((*head)->y - center_y));
+    int rad_sq = ((head->x - center_x) * (head->x - center_x)) + ((head->y - center_y) * (head->y - center_y));
 
     if (rad_sq <= (radius * radius))
     {
         count++;
     }
 
-    count += pointsInCircle(center_x, center_y, radius, &(*head)->left);
-    count += pointsInCircle(center_x, center_y, radius, &(*head)->right);
+    if ((head->x - center_x) * (head->x - center_x) <= (radius * radius) || (head->y - center_y) * (head->y - center_y) <= (radius * radius)) {
+        count += pointsInCircle(center_x, center_y, radius, head->left);
+        count += pointsInCircle(center_x, center_y, radius, head->right);
+    } 
+    else if (head->x > center_x) 
+    {
+        // Only check the left subtree
+        count += pointsInCircle(center_x, center_y, radius, head->left);
+    } 
+    else 
+    {
+        // Only check the right subtree
+        count += pointsInCircle(center_x, center_y, radius, head->right);
+    }
 
     return count;
+}
+
+void freeTree(Point* head) {
+    if (head == NULL) {
+        return;
+    }
+    freeTree(head->left);
+    freeTree(head->right);
+    free(head);
 }
 
 int main(int argc, char* argv[])
@@ -127,9 +148,11 @@ int main(int argc, char* argv[])
     while (1)
     {
         scanf("%d %d %d", &center_x, &center_y, &radius);
-        int count = pointsInCircle(center_x, center_y, radius, &head);
+        int count = pointsInCircle(center_x, center_y, radius, head);
         printf("%d\n", count);
     }
+
+    freeTree(head);
     
     return 0;
     }
