@@ -58,7 +58,7 @@ void addToTree(int x_val, int y_val, Point** head, int depth) {
     return;
 }
 
-int pointsInCircle (int center_x, int center_y, int radius, Point* head) {
+int pointsInCircle (int center_x, int center_y, int radius, Point* head, int depth) {
     if (head == NULL) 
     {
         return 0; // Check if head is NULL
@@ -77,9 +77,32 @@ int pointsInCircle (int center_x, int center_y, int radius, Point* head) {
         count++;
     }
 
-    if ((head->x - center_x) * (head->x - center_x) <= (radius * radius) || (head->y - center_y) * (head->y - center_y) <= (radius * radius)) {
-        count += pointsInCircle(center_x, center_y, radius, head->left);
-        count += pointsInCircle(center_x, center_y, radius, head->right);
+    if (depth % 2 == 0)
+    {
+        if (center_x - radius <= head->x)
+        {
+            count += pointsInCircle(center_x, center_y, radius, head->left, depth + 1);
+        }
+        if (center_x + radius >= head->x) 
+        {
+            count += pointsInCircle(center_x, center_y, radius, head->right, depth + 1);
+        }
+    }
+    else 
+    {
+        if (center_y - radius <= head->y)
+        {
+            count += pointsInCircle(center_x, center_y, radius, head->left, depth + 1);
+        }
+        if (center_y + radius >= head->y) 
+        {
+            count += pointsInCircle(center_x, center_y, radius, head->right, depth + 1);
+        }
+    }
+      
+    /*if ((head->x - center_x) * (head->x - center_x) <= (radius * radius) || (head->y - center_y) * (head->y - center_y) <= (radius * radius)) {
+        count += pointsInCircle(center_x, center_y, radius, head->left, depth + 1);
+        count += pointsInCircle(center_x, center_y, radius, head->right, depth + 1);
     } 
     else if (head->x > center_x) 
     {
@@ -91,6 +114,7 @@ int pointsInCircle (int center_x, int center_y, int radius, Point* head) {
         // Only check the right subtree
         count += pointsInCircle(center_x, center_y, radius, head->right);
     }
+    */
 
     return count;
 }
@@ -149,7 +173,7 @@ int main(int argc, char* argv[])
     while (1)
     {
         scanf("%d %d %d", &center_x, &center_y, &radius);
-        int count = pointsInCircle(center_x, center_y, radius, head);
+        int count = pointsInCircle(center_x, center_y, radius, head, depth);
         printf("%d\n", count);
     }
 
