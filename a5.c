@@ -156,7 +156,7 @@ int main(int argc, char* argv[])
     int y_val;
     int depth = 0;
 
-    while (fscanf(file, "%d %d", &x_val, &y_val) != EOF) 
+    while (fscanf(file, "%d %d", &x_val, &y_val) == 2) 
     {
         addToTree(x_val, y_val, &head, depth); //starts at depth = 0 every time
     }
@@ -170,9 +170,9 @@ int main(int argc, char* argv[])
     int radius;
     
     //printf("what center and what radius, for center put x and y \n");
-    while (1)
+    while (scanf("%d %d %d", &center_x, &center_y, &radius)==3)
     {
-        scanf("%d %d %d", &center_x, &center_y, &radius);
+        
         int count = pointsInCircle(center_x, center_y, radius, head, depth);
         printf("%d\n", count);
     }
