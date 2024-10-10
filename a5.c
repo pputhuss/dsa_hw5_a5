@@ -99,23 +99,6 @@ int pointsInCircle (int center_x, int center_y, int radius, Point* head, int dep
             count += pointsInCircle(center_x, center_y, radius, head->right, depth + 1);
         }
     }
-      
-    /*if ((head->x - center_x) * (head->x - center_x) <= (radius * radius) || (head->y - center_y) * (head->y - center_y) <= (radius * radius)) {
-        count += pointsInCircle(center_x, center_y, radius, head->left, depth + 1);
-        count += pointsInCircle(center_x, center_y, radius, head->right, depth + 1);
-    } 
-    else if (head->x > center_x) 
-    {
-        // Only check the left subtree
-        count += pointsInCircle(center_x, center_y, radius, head->left);
-    } 
-    else 
-    {
-        // Only check the right subtree
-        count += pointsInCircle(center_x, center_y, radius, head->right);
-    }
-    */
-
     return count;
 }
 
